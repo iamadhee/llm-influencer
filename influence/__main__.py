@@ -11,9 +11,6 @@ import requests
 import warnings
 warnings.filterwarnings('ignore')
 
-os.environ['REQUESTS_CA_BUNDLE'] = '/Users/adheeban.m/Downloads/openai-com.pem'
-os.environ["OPENAI_API_KEY"] = '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'
-
 llm = ChatOpenAI(temperature=.9, model = 'gpt-3.5-turbo')
 
 quotes_df = pd.read_json(open('data/finalq.json','r'))
