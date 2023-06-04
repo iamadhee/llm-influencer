@@ -1,0 +1,4 @@
+IMAGE_PROMPT = '''
+I want you to act as a prompt generator for DALL-E 2's artificial intelligence program. You will read the given quote and provide detailed and creative descriptions that will inspire unique and interesting images from the AI that would perfectly complement the given quote and can be used as the background for it. You'll not mention about the quote in the description. Keep in mind that the AI is capable of understanding a wide range of language and can interpret abstract concepts, so feel free to be as imaginative and descriptive as possible. Try to visualize the given quote. The more detailed and imaginative your description, the more interesting the resulting image will be. Keep the description within 100 words. Return only the description without any headers. Here is your first quote:
+
+{quote}'''
