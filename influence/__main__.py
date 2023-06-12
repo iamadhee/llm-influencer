@@ -1,20 +1,23 @@
-from langchain.chat_models import ChatOpenAI
-import pandas as pd
-import random
-import utils
-from prompts.quote import QUOTE_PROMPT, NOTE_TEXT
-from prompts.image import IMAGE_PROMPT
-from datetime import datetime
-from openai import Image
 import os
-import requests
+import random
 import warnings
-from api.twitter import Twitter
+from datetime import datetime
 from pathlib import Path
+
+import pandas as pd
+import requests
+import utils
+from api.twitter import Twitter
+from langchain.chat_models import ChatOpenAI
+from openai import Image
+from prompts.image import IMAGE_PROMPT
+from prompts.quote import NOTE_TEXT, QUOTE_PROMPT
 from twitter_text import parse_tweet
+
 warnings.filterwarnings('ignore')
 import configparser
 import logging
+
 logging.getLogger().setLevel(logging.INFO)
 
 cur_path = Path().cwd() / 'influence'
