@@ -1,26 +1,39 @@
 import tweepy
+from twitter_text import parse_tweet
 
-def tweet(filename, text, config):
-    auth = tweepy.OAuth1UserHandler(
+class Twitter:
+
+    def __init__(self, config) -> None:
+        auth = tweepy.OAuth1UserHandler(
         consumer_key=config['consumer_key'],
         consumer_secret=config['consumer_secret'],
         access_token=config['access_token'],
         access_token_secret=config['access_token_secret']
-    )
+        )
 
-    api = tweepy.API(auth)
+        self.api = tweepy.API(auth)
 
-    client = tweepy.Client(
-        bearer_token=config['bearer_token'],
-        consumer_key=config['consumer_key'],
-        consumer_secret=config['consumer_secret'],
-        access_token=config['access_token'],
-        access_token_secret=config['access_token_secret']  
-    )
+        self.client = tweepy.Client(
+            bearer_token=config['bearer_token'],
+            consumer_key=config['consumer_key'],
+            consumer_secret=config['consumer_secret'],
+            access_token=config['access_token'],
+            access_token_secret=config['access_token_secret']  
+        )
 
-    media = api.media_upload(filename=filename)
-    print("MEDIA: ", media)
+    def tweet(self, text, filename=None):
+        api = self.api
+        client = self.client
+        
+        media = api.media_upload(filename=filename)
+        if filename:
+            tweet = client.create_tweet(text=text, media_ids=[media.media_id_string])
+        else:
+            tweet = client.create_tweet(text=text)
+        return tweet[0]['id']
 
-    tweet = client.create_tweet(text=text, media_ids=[media.media_id_string])
-    print("TWEET: ", tweet)
+    def reply_to_tweet(self, tweet_id, text):
+        reply = self.client.create_tweet(text=text, in_reply_to_tweet_id=tweet_id)
+        return reply
+
 
