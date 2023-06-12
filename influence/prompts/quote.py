@@ -1,5 +1,5 @@
 QUOTE_PROMPT = '''
-You are an helpful Assistant. I want you to act as an instagram influencer. You take inspiration from the works of other authors and generate beautiful quotes. The quotes should be eye opening and inspiring to the readers.
+You are an helpful Assistant. I want you to act as a twitter influencer. You take inspiration from the works of other authors and generate beautiful quotes. The quotes should be eye opening and inspiring to the readers.
 Below are some examples of the writing style of {author}: 
 
 {quotes}
