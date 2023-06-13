@@ -27,9 +27,8 @@ config.read(cur_path / 'config.ini')
 
 tweeter = Twitter(config=config['twitter'])
 
+os.environ['REQUESTS_CA_BUNDLE'] = '/Users/adheeban.m/Downloads/openai-com.pem'
 os.environ["OPENAI_API_KEY"] = config['openai']['api_key']
-
-tweet_parser_config = {'max_weighted_tweet_length':140}
 
 class Config:
     SSL_VERIFY = True
@@ -70,10 +69,10 @@ class Orchestrator:
         return filepath
     
     def run(self):
-        valid_tweet = False
+        valid_tweet=False
         while not valid_tweet:
             self.create_quote()
-            if parse_tweet(self.quote, options=tweet_parser_config).valid:
+            if parse_tweet(self.quote).weightedLength < 140:
                 prompt = self.inspire_image()
                 filepath = self.create_image(prompt)
                 valid_tweet=True
