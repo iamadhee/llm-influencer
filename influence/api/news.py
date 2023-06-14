@@ -1,4 +1,4 @@
-endpoint = 'https://newsapi.org/v2/top-headlines?country={country}&apiKey=a328892bafb6438a95bd2669ab8fae6c'
+endpoint = 'https://newsapi.org/v2/top-headlines?country={country}&apiKey={api_key}'
 
 import requests
 import warnings
