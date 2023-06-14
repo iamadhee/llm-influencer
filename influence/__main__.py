@@ -27,7 +27,6 @@ config.read(cur_path / 'config.ini')
 
 tweeter = Twitter(config=config['twitter'])
 
-os.environ['REQUESTS_CA_BUNDLE'] = '/Users/adheeban.m/Downloads/openai-com.pem'
 os.environ["OPENAI_API_KEY"] = config['openai']['api_key']
 
 class Config:
