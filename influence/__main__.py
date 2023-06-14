@@ -19,9 +19,17 @@ warnings.filterwarnings('ignore')
 import configparser
 import logging
 
-logging.getLogger().setLevel(logging.INFO)
+today = datetime.now().strftime('%d%b%y')
 
+logger = logging.getLogger('influencer')
 cur_path = Path().cwd() / 'influence'
+
+logname = cur_path / f'logs/{today}.log'
+logging.basicConfig(filename=logname,
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.INFO)
 
 config = configparser.RawConfigParser()
 config.read(cur_path / 'config.ini')
@@ -61,7 +69,7 @@ class Orchestrator:
 
     def create_image(self, prompt):
         image_url = Image.create(prompt=prompt, size='1024x1024')['data'][0]['url']
-        filepath = cur_path / f"gen_images/{datetime.now().strftime('%d%b%y')}.jpg"
+        filepath = cur_path / f"gen_images/{today}.jpg"
         filepath.touch()
         response = requests.get(url=image_url, stream=True, verify=Config.SSL_VERIFY)
         with open(filepath, 'wb') as f:
@@ -69,20 +77,25 @@ class Orchestrator:
         return filepath
     
     def run(self):
-        valid_tweet=False
-        while not valid_tweet:
-            self.create_quote()
-            if parse_tweet(self.quote).weightedLength < 140:
-                prompt = self.inspire_image()
-                filepath = self.create_image(prompt)
-                valid_tweet=True
-            else:
-                time.sleep(60)
+        try:
+            valid_tweet=False
+            while not valid_tweet:
+                self.create_quote()
+                if parse_tweet(self.quote).weightedLength <= 140:
+                    prompt = self.inspire_image()
+                    filepath = self.create_image(prompt)
+                    valid_tweet=True
+                else:
+                    logging.warn('tweet not within limit - retrying quote generation')
+                    time.sleep(30)
 
-        tweet_text = self.quote
-        logging.info(f'\n\nTWEET TEXT:\n{tweet_text}\n{NOTE_TEXT}')
-        tweet_id = tweeter.tweet(filename=filepath, text=tweet_text)
-        tweeter.reply_to_tweet(tweet_id=tweet_id, text=NOTE_TEXT)
+            tweet_text = self.quote
+            logging.info(f'\n\nTWEET TEXT:\n{tweet_text}\n{NOTE_TEXT}')
+            tweet_id = tweeter.tweet(filename=filepath, text=tweet_text)
+            tweeter.reply_to_tweet(tweet_id=tweet_id, text=NOTE_TEXT)
+
+        except Exception as e:
+            logging.error(e)
 
 if __name__=='__main__':
     orchestrator = Orchestrator()
