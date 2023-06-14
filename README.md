@@ -53,7 +53,7 @@ We welcome any type of contributions to this project. If you find a bug or have 
 
 ----
 
-## License :
+## License 🗒️
 
 llm-influencer is licensed under the Apache 2.0 License. See the `LICENSE` file for more information.
 
