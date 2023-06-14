@@ -13,6 +13,7 @@ from openai import Image
 from prompts.image import IMAGE_PROMPT
 from prompts.quote import NOTE_TEXT, QUOTE_PROMPT
 from twitter_text import parse_tweet
+import time
 
 warnings.filterwarnings('ignore')
 import configparser
@@ -75,6 +76,8 @@ class Orchestrator:
                 prompt = self.inspire_image()
                 filepath = self.create_image(prompt)
                 valid_tweet=True
+            else:
+                time.sleep(60)
 
         tweet_text = self.quote
         logging.info(f'\n\nTWEET TEXT:\n{tweet_text}\n{NOTE_TEXT}')
