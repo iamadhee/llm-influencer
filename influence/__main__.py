@@ -14,6 +14,7 @@ from prompts.image import IMAGE_PROMPT
 from prompts.quote import NOTE_TEXT, QUOTE_PROMPT
 from twitter_text import parse_tweet
 import time
+import re
 
 warnings.filterwarnings('ignore')
 import configparser
@@ -24,7 +25,8 @@ today = datetime.now().strftime('%d%b%y')
 logger = logging.getLogger('influencer')
 cur_path = Path().cwd() / 'influence'
 
-logname = cur_path / f'logs/{today}.log'
+logname = cur_path / f"logs/{today}.log"
+logname.touch()
 logging.basicConfig(filename=logname,
                     filemode='a',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
@@ -56,7 +58,8 @@ class Orchestrator:
 
     def create_quote(self):
         q_prompt = QUOTE_PROMPT.format(author=self.auth.title(), quotes=self.fquotes)
-        self.quote = self.llm.predict(q_prompt).replace('"','')
+        self.quote = self.llm.predict(q_prompt)
+        self.quote = re.sub('#(\w+)|"','',self.quote)
         logging.info(f'{q_prompt}\n----------')
     
     def inspire_image(self):
@@ -81,11 +84,12 @@ class Orchestrator:
             valid_tweet=False
             while not valid_tweet:
                 self.create_quote()
-                if parse_tweet(self.quote).weightedLength <= 140:
+                if parse_tweet(self.quote).weightedLength <= 145:
                     prompt = self.inspire_image()
                     filepath = self.create_image(prompt)
                     valid_tweet=True
                 else:
+                    logging.warn(f'QUOTE:  {self.quote} ')
                     logging.warn('tweet not within limit - retrying quote generation')
                     time.sleep(30)
 
