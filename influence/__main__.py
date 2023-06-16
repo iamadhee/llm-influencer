@@ -24,6 +24,7 @@ today = datetime.now().strftime('%d%b%y')
 
 logger = logging.getLogger('influencer')
 cur_path = Path().cwd() / 'influence'
+data_path =  Path().cwd() / 'data/finalq.json'
 
 logname = cur_path / f"logs/{today}.log"
 logname.touch()
@@ -48,7 +49,7 @@ class Orchestrator:
     def __init__(self):
         self.config = config
         self.llm = ChatOpenAI(temperature=.9, model = 'gpt-3.5-turbo')
-        quotes_df = pd.read_json(open('data/finalq.json','r'))
+        quotes_df = pd.read_json(open(data_path,'r'))
 
         auth_list = quotes_df['Author'].unique().tolist()
         self.auth = auth_list[random.randint(0,len(auth_list))]
@@ -104,7 +105,3 @@ class Orchestrator:
 if __name__=='__main__':
     orchestrator = Orchestrator()
     orchestrator.run()
-
-
-
-
