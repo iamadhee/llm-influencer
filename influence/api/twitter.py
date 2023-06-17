@@ -24,8 +24,8 @@ class Twitter:
     def tweet(self, text, filename=None):
         client = self.client
         
-        media = self.api.media_upload(filename=filename)
         if filename:
+            media = self.api.media_upload(filename=filename)
             tweet = client.create_tweet(text=text, media_ids=[media.media_id_string])
         else:
             tweet = client.create_tweet(text=text)
@@ -33,7 +33,7 @@ class Twitter:
 
     def reply_to_tweet(self, tweet_id, text):
         reply = self.client.create_tweet(text=text, in_reply_to_tweet_id=tweet_id)
-        return reply
+        return reply[0]['id']
     
     def get_user_tweets(self, user):
         tweets = self.client.get_users_tweets(id=user,max_results=100)
