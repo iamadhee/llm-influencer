@@ -31,7 +31,7 @@ class Orchestrator:
         self.tweet_storm = TweetStorm(config=config_ini)
 
     def pick_job_by_day(self):
-        job_list = config_yml['JOBS']
+        job_list = config_yml['MODULES']
         if len(job_list) > 1:
             current_day = datetime.now().weekday()
             index = current_day % len(job_list)  
