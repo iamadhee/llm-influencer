@@ -10,6 +10,7 @@ from prompts.image import IMAGE_PROMPT
 from prompts.quote import NOTE_TEXT, QUOTE_PROMPT
 from twitter_text import parse_tweet
 import re
+from modules.base import BaseModule
 from pathlib import Path
 from utils import setup_custom_logger
 
@@ -21,7 +22,7 @@ data_path = influence_directory / 'data/finalq.json'
 current_date = datetime.now().strftime('%d%b%y')
 
 
-class Quoter:
+class Quoter(BaseModule):
     SSL_VERIFY = False
 
     def __init__(self, config):

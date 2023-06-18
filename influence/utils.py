@@ -11,7 +11,7 @@ def setup_email_alerter(alert_email, app_pwd):
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.ERROR)
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger('email_alerter')
     smtp_handler = logging.handlers.SMTPHandler(mailhost=('smtp.gmail.com', 587),
                                                 fromaddr=alert_email,
                                                 toaddrs=[alert_email],
@@ -27,5 +27,5 @@ def setup_custom_logger():
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO)
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger('general')
     return logger

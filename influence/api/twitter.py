@@ -37,6 +37,7 @@ class Twitter:
     
     def get_user_tweets(self, user):
         tweets = self.client.get_users_tweets(id=user,max_results=100)
+        return tweets
         
 
 

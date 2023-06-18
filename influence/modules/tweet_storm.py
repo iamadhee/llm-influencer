@@ -7,6 +7,7 @@ import yaml
 import random
 from ast import literal_eval
 import re
+from modules.base import BaseModule
 from utils import setup_custom_logger
 
 logger = setup_custom_logger()
@@ -18,7 +19,7 @@ config_path = influence_directory / 'configs/storm.yaml'
 with open(config_path, 'rb') as f:
     aspects_config = yaml.safe_load(f)
 
-class TweetStorm:
+class TweetStorm(BaseModule):
     def __init__(self, config) -> None:
         self.twitter_config = config['twitter']
         self.twitter_api = Twitter(config=self.twitter_config)
