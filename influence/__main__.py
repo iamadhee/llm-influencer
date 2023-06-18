@@ -1,107 +1,56 @@
 import os
-import random
 import warnings
-from datetime import datetime
-from pathlib import Path
-
-import pandas as pd
-import requests
-import utils
-from api.twitter import Twitter
-from langchain.chat_models import ChatOpenAI
-from openai import Image
-from prompts.image import IMAGE_PROMPT
-from prompts.quote import NOTE_TEXT, QUOTE_PROMPT
-from twitter_text import parse_tweet
-import time
-import re
-
-warnings.filterwarnings('ignore')
+from modules.quoter import Quoter
+from modules.tweet_storm import TweetStorm
 import configparser
-import logging
+from pathlib import Path
+from utils import setup_email_alerter
+import yaml
+import schedule
+import time
+from datetime import datetime
+warnings.filterwarnings('ignore')
 
-today = datetime.now().strftime('%d%b%y')
+current_directory = Path().cwd()
+influence_directory = current_directory / 'influence'
 
-logger = logging.getLogger('influencer')
-cur_path = Path().cwd() / 'influence'
-data_path =  Path().cwd() / 'data/finalq.json'
+config_ini = configparser.RawConfigParser()
+config_ini.read(influence_directory / 'config.ini')
 
-logname = cur_path / f"logs/{today}.log"
-logname.touch()
-logging.basicConfig(filename=logname,
-                    filemode='a',
-                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                    datefmt='%H:%M:%S',
-                    level=logging.INFO)
+with open(influence_directory / 'config.yaml', 'rb') as f:
+    config_yml = yaml.safe_load(f) 
 
-config = configparser.RawConfigParser()
-config.read(cur_path / 'config.ini')
+email_ini = config_ini['smtp']
+logger = setup_email_alerter(alert_email=email_ini['alert_email'], app_pwd=email_ini['app_pwd'])
 
-tweeter = Twitter(config=config['twitter'])
-
-os.environ["OPENAI_API_KEY"] = config['openai']['api_key']
-
-class Config:
-    SSL_VERIFY = True
+os.environ["OPENAI_API_KEY"] = config_ini['openai']['api_key']
 
 class Orchestrator:
-
     def __init__(self):
-        self.config = config
-        self.llm = ChatOpenAI(temperature=.9, model = 'gpt-3.5-turbo')
-        quotes_df = pd.read_json(open(data_path,'r'))
+        self.quoter = Quoter(config=config_ini)
+        self.tweet_storm = TweetStorm(config=config_ini)
 
-        auth_list = quotes_df['Author'].unique().tolist()
-        self.auth = auth_list[random.randint(0,len(auth_list))]
-        auth_quotes = quotes_df[quotes_df['Author'] == self.auth]['Quote'].tolist()
-        q_list = random.sample(auth_quotes, 4)
-        self.fquotes = utils.format_quotes(q_list=q_list)
+    def pick_job_by_day(self):
+        job_list = config_yml['MODULES']
+        if len(job_list) > 1:
+            current_day = datetime.now().weekday()
+            index = current_day % len(job_list)  
+            module_name = job_list[index]
+        else:
+            module_name = job_list[0]
+        return module_name.lower()
 
-    def create_quote(self):
-        q_prompt = QUOTE_PROMPT.format(author=self.auth.title(), quotes=self.fquotes)
-        self.quote = self.llm.predict(q_prompt)
-        self.quote = re.sub('#(\w+)|"','',self.quote)
-        logging.info(f'{q_prompt}\n----------')
-    
-    def inspire_image(self):
-        i_prompt = IMAGE_PROMPT.format(quote=self.quote)
-        dalle_prompt = self.llm.predict(i_prompt)
+    def execute(self):
+        module_name = self.pick_job_by_day()
+        module = getattr(self, module_name)
+        module.run()
 
-        logging.info(f'{i_prompt}\n----------')
-        logging.info(f'{dalle_prompt}\n----------')
-        return dalle_prompt
-
-    def create_image(self, prompt):
-        image_url = Image.create(prompt=prompt, size='1024x1024')['data'][0]['url']
-        filepath = cur_path / f"gen_images/{today}.jpg"
-        filepath.touch()
-        response = requests.get(url=image_url, stream=True, verify=Config.SSL_VERIFY)
-        with open(filepath, 'wb') as f:
-            f.write(response.content)
-        return filepath
-    
-    def run(self):
-        try:
-            valid_tweet=False
-            while not valid_tweet:
-                self.create_quote()
-                if parse_tweet(self.quote).weightedLength <= 145:
-                    prompt = self.inspire_image()
-                    filepath = self.create_image(prompt)
-                    valid_tweet=True
-                else:
-                    logging.warn(f'QUOTE:  {self.quote} ')
-                    logging.warn('tweet not within limit - retrying quote generation')
-                    time.sleep(30)
-
-            tweet_text = self.quote
-            logging.info(f'\n\nTWEET TEXT:\n{tweet_text}\n{NOTE_TEXT}')
-            tweet_id = tweeter.tweet(filename=filepath, text=tweet_text)
-            tweeter.reply_to_tweet(tweet_id=tweet_id, text=NOTE_TEXT)
-
-        except Exception as e:
-            logging.error(e)
-
-if __name__=='__main__':
-    orchestrator = Orchestrator()
-    orchestrator.run()
+if __name__ == '__main__':
+    try:
+        orchestrator = Orchestrator()
+        schedule.every().day.at(config_yml['SCHEDULE_TIME']).do(orchestrator.execute)
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+    except Exception as e:
+        logger.error(e, exc_info=True)
