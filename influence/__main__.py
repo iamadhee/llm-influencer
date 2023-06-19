@@ -29,19 +29,18 @@ class Orchestrator:
     def __init__(self):
         self.quoter = Quoter(config=config_ini)
         self.tweet_storm = TweetStorm(config=config_ini)
-
-    def pick_job_by_day(self):
+    
+    def pick_item_by_date(self):
         job_list = config_yml['MODULES']
-        if len(job_list) > 1:
-            current_day = datetime.now().weekday()
-            index = current_day % len(job_list)  
-            module_name = job_list[index]
-        else:
-            module_name = job_list[0]
-        return module_name.lower()
+        total_items = len(job_list)
+        current_date = datetime.now().day
+        index = current_date % total_items
+        if index == 0:
+            index = total_items
+        return job_list[index - 1].lower()
 
     def execute(self):
-        module_name = self.pick_job_by_day()
+        module_name = self.pick_item_by_date()
         module = getattr(self, module_name)
         module.run()
 
