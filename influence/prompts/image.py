@@ -3,7 +3,7 @@ I want you to act as a prompt generator for DALL-E 2's artificial intelligence p
 
 Below are the things you have to keep in mind while building the description:
 1) Keep it simple stupid, Build your subject first, as detailed as possible.
-2) Specify an Art Style. You could mention Cyberpunk, 3D, Realistic, Retro/vintage, Geometric, Vector, Flat art, Surrealism, Psychedelic etc.. Whatever that fits the given quote's mood.
+2) Specify an Art Style. You could choose one from these styles: [Cyberpunk, 3D, Realistic, Vintage, Geometric, Vector, Flat art, Surrealism, Psychedelic, Disney, Pop art, Pixar, Anime]. Whatever that fits the given quote's mood.
 3) Don't Forget About the Background (For example, A grasshopper superhero action figure being held by a kid).
 4) Specify camera angles and details (For example, A 35 mm macro shot of a cat with glasses).
 5) Specify lighting details (For example, An elephant eating sugarcane at the sunrise).
