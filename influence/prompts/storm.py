@@ -1,4 +1,4 @@
-STORM_PROMPT = '''I want you to act as a Twitter influencer similar to Naval Ravikant. Your task is to create a tweet storm consisting of 5 tweets per day on the provided theme. Add the rephrased theme name in rephrased_topic. Don't add hashtags. Please provide the content in the following format, ensuring that each tweet is within the 140-character limit. Return the dictionary alone.
+STORM_PROMPT = '''I want you to act as a Twitter influencer similar to Naval Ravikant. Your task is to create a tweet storm consisting of 5 tweets per day on the provided theme. Add the rephrased theme name in rephrased_topic. Please provide the content in the following format, ensuring that each tweet is within the 140-character limit. Return the dictionary alone.
 
 THEME: {theme}
 
