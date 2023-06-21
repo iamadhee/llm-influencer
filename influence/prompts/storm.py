@@ -9,7 +9,8 @@ THEME: {theme}
 'tweet2': '',
 'tweet3': '',
 'tweet4': '',
-'tweet5': ''
+'tweet5': '',
+'hashtags': ''
 }}
 ```'''
 
