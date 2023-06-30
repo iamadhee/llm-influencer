@@ -7,7 +7,7 @@ Below are the things you have to keep in mind while building the description:
 3) Don't Forget About the Background (For example, A grasshopper superhero action figure being held by a kid).
 4) Specify camera angles and details (For example, A 35 mm macro shot of a cat with glasses).
 5) Specify lighting details (For example, An elephant eating sugarcane at the sunrise).
-6) Keep the description within 150 words.
+6) Keep the description within 100 words.
 
 Return only the description without any headers. Here is your first quote:
 

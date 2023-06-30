@@ -56,8 +56,8 @@ class TweetStorm(BaseModule):
 
         for index, tweet in enumerate(tweets, 1):
             tweet = re.sub('#(\w+)', '', tweet)
-            index = f'{index}/{len(tweets)}: '
-            tweet_text = index + tweet
+            index = f'{index}/{len(tweets)}:'
+            tweet_text = index + ' ' + tweet if not tweet.startswith(index) else tweet
             tweet_id = self.twitter_api.reply_to_tweet(tweet_id=tweet_id, text=tweet_text)
 
         tweet_id = self.twitter_api.reply_to_tweet(tweet_id=tweet_id, text=hashtags)
