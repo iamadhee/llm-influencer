@@ -47,8 +47,8 @@ class TweetStorm(BaseModule):
         tweet_dict = self.generate_storm()
         logger.info(f"RESULT: {tweet_dict}")
         rephrased_topic = tweet_dict['rephrased_topic']
-        hashtags_list = tweet_dict['hashtags'].split(",")
-        hashtags = " ".join([f'#{hasht}' if not hasht.startswith('#') else hasht for hasht in hashtags_list])
+        hashtags_list = re.split(",|\s",tweet_dict['hashtags'])
+        hashtags = " ".join([f'#{hasht.strip()}' if not hasht.startswith('#') else hasht for hasht in hashtags_list])
         tweets = [tweet_dict[k] for k in tweet_dict.keys() if k not in ('rephrased_topic','hashtags')]
         primary_tweet = THREAD_STARTER.format(rephrased=rephrased_topic)
 
