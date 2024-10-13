@@ -6,6 +6,8 @@
 Your AI-powered content generator
 </div>
 
+
+## About
 This project is an experimentation with AI, that aims on AI-Driven content generation. The aim is to be able to generate various types of content, such as podcasts, articles, and more using AI.
 
 ## Installation
