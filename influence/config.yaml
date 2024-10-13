@@ -1,3 +1,0 @@
-SCHEDULE_TIME: "13:00"
-
-MODULES: ['tweet_storm', 'quoter']

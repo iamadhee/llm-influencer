@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "llm-influencer"
+version = "0.1.0"
+description = "This project is an experimentation with AI, that aims on AI-Driven content generation"
+authors = ["iamadhee <caeser.alfred@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+langgraph = "^0.2.34"
+langchain-openai = "^0.2.2"
+langchain-community = "^0.3.1"
+pydub = "^0.25.1"
+tomli = "^2.0.2"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.7"
+pre-commit = "^3.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
