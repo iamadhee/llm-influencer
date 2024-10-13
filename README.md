@@ -26,13 +26,6 @@ This project is an experimentation with AI, that aims on AI-Driven content gener
     - `<description>` is the description of the content you want to generate.
 
 ---
-## Demos
-<details>
-  <summary><h4>Demo for Different Types of Content Generation</h4></summary>
-### Podcast
-</details>
-
----
 
 ## Contributing
 Currently, only podcast generation is supported with LLM-Influencer. We are working on adding more content types. If you'd like to contribute to this project, please feel free to submit a pull request.
